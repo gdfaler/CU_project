@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HackTeam Match</title>
+  <link rel="stylesheet" href="./colors.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: var(--color-fon, #a5dcc6);
+      --surface: #ffffff;
+      --text-main: var(--color-5, #126171);
+      --text-soft: #335a60;
+      --accent: var(--color-4, #409da1);
+      --accent-strong: var(--color-5, #126171);
+      --success: var(--color-3, #45a994);
+      --border: var(--color-1, #95e3c4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--color-1, #95e3c4) 100%);
+      color: var(--text-main);
+    }
+
+    .app {
+      max-width: 480px;
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 8px 20px rgba(18, 97, 113, 0.12);
+    }
+
+    .title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .chip {
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(105, 197, 160, 0.18);
+      color: var(--text-main);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .card-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .name {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .role {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .match {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--success);
+      background: rgba(69, 169, 148, 0.12);
+      border-radius: 999px;
+      padding: 5px 8px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      background: rgba(64, 157, 161, 0.12);
+      color: var(--accent-strong);
+      border-radius: 8px;
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+
+    .actions {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      border: 1px solid #126171;
+      border-radius: 12px;
+      padding: 12px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      background: #126171;
+      cursor: pointer;
+    }
+
+    .main-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--color-3, #45a994), var(--color-5, #126171));
+      box-shadow: 0 8px 18px rgba(18, 97, 113, 0.28);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="header">
+      <h1 class="title">Тимдер</h1>
+      <p class="subtitle">Подбор людей для хакатона по ролям, навыкам и занятости.</p>
+    </section>
+
+    <section class="filters" aria-label="Фильтры">
+      <span class="chip active">Все</span>
+      <span class="chip">Frontend</span>
+      <span class="chip">Backend</span>
+      <span class="chip">Designer</span>
+      <span class="chip">ML/AI</span>
+    </section>
+
+    <section class="card-list" aria-label="Кандидаты">
+      <article class="card">
+        <div class="row">
+          <div>
+            <p class="name">Анна</p>
+            <p class="role">Frontend Developer</p>
+          </div>
+          <span class="match">92% match</span>
+        </div>
+        <div class="tags">
+          <span class="tag">React</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">UI</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="row">
+          <div>
+            <p class="name">Илья</p>
+            <p class="role">Backend Developer</p>
+          </div>
+          <span class="match">88% match</span>
+        </div>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">FastAPI</span>
+          <span class="tag">PostgreSQL</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="actions" aria-label="Навигация и действие">
+      <button class="nav-btn" type="button">Личный кабинет</button>
+      <button class="main-btn" type="button">Создать команду</button>
+      <button class="nav-btn" type="button">На главную</button>
+    </section>
+  </main>
+
+  <script>
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+  </script>
+</body>
+</html>
