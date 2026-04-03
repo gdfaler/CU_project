@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>HackTeam Match</title>
+  <title>NBVlth</title>
   <link rel="stylesheet" href="./colors.css" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
@@ -45,6 +45,20 @@
       border-radius: 18px;
       padding: 14px;
       box-shadow: 0 8px 20px rgba(18, 97, 113, 0.12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin-left: -10px;
     }
 
     .title {
@@ -138,18 +152,59 @@
       padding: 4px 8px;
     }
 
-    .actions {
+    .actions-panel {
       margin-top: auto;
+      background: #45a994;
+      border: 1px solid rgba(18, 97, 113, 0.22);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(18, 97, 113, 0.12);
+    }
+
+    .actions {
       display: grid;
       grid-template-columns: 1fr 1.4fr 1fr;
       gap: 10px;
+      align-items: stretch;
+    }
+
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      min-height: 100%;
+    }
+
+    .action-btn--main {
       align-items: center;
     }
 
+    .btn-banner {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--success);
+      background: rgba(69, 169, 148, 0.12);
+      border-radius: 999px;
+      padding: 4px 8px;
+      text-align: center;
+    }
+
+    .btn-banner--accent {
+      color: var(--accent-strong);
+      background: rgba(64, 157, 161, 0.12);
+    }
+
     .nav-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: 1px solid #126171;
       border-radius: 12px;
-      padding: 12px 10px;
+      padding: 8px;
       font-size: 13px;
       font-weight: 600;
       color: #ffffff;
@@ -157,15 +212,28 @@
       cursor: pointer;
     }
 
+    .nav-btn-img {
+      max-width: 100%;
+      max-height: 40px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      pointer-events: none;
+    }
+
     .main-btn {
+      flex: 0 0 auto;
+      width: 50%;
+      max-width: 100%;
       border: none;
       border-radius: 14px;
-      padding: 14px;
+      padding: 12px 10px;
       font-size: 16px;
       font-weight: 700;
       color: #fff;
-      background: linear-gradient(135deg, var(--color-3, #45a994), var(--color-5, #126171));
-      box-shadow: 0 8px 18px rgba(18, 97, 113, 0.28);
+      background: #126171;
+      box-shadow: 0 4px 12px rgba(18, 97, 113, 0.2);
       cursor: pointer;
     }
   </style>
@@ -173,7 +241,17 @@
 <body>
   <main class="app">
     <section class="header">
-      <h1 class="title">Тимдер</h1>
+      <div class="brand">
+        <img
+          class="brand-logo"
+          src="kartink/image%20(2).png"
+          width="44"
+          height="44"
+          alt=""
+          decoding="async"
+        />
+        <h1 class="title">ТИМдер</h1>
+      </div>
       <p class="subtitle">Подбор людей для хакатона по ролям, навыкам и занятости.</p>
     </section>
 
@@ -217,10 +295,22 @@
       </article>
     </section>
 
-    <section class="actions" aria-label="Навигация и действие">
-      <button class="nav-btn" type="button">Личный кабинет</button>
-      <button class="main-btn" type="button">Создать команду</button>
-      <button class="nav-btn" type="button">На главную</button>
+    <section class="actions-panel" aria-label="Навигация и действие">
+      <div class="actions">
+        <div class="action-btn">
+          <button class="nav-btn" type="button" aria-label="На главную">
+            <img class="nav-btn-img" src="kartink/image.png" alt="" decoding="async" />
+          </button>
+        </div>
+        <div class="action-btn action-btn--main">
+          <button class="main-btn" type="button">Создать команду</button>
+        </div>
+        <div class="action-btn">
+          <button class="nav-btn" type="button" aria-label="Личный кабинет">
+            <img class="nav-btn-img" src="kartink/image%20(1).png" alt="" decoding="async" />
+          </button>
+        </div>
+      </div>
     </section>
   </main>
 
