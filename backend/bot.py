@@ -1,13 +1,60 @@
-import telebot
+import json
+import os
 
-bot = telebot.TeleBot('8589284379:AAE16fyggdA0p12iSmACUu0bSMa8WHSLS8c')
+import telebot
+from telebot import types
+
+
+MINI_APP_URL = os.getenv("MINI_APP_URL", "https://gdfaler.pythonanywhere.com/")
+BOT_TOKEN = "8589284379:AAE16fyggdA0p12iSmACUu0bSMa8WHSLS8c"
+
+if not BOT_TOKEN:
+    raise RuntimeError(
+        "Missing TELEGRAM_BOT_TOKEN env var. "
+        "Set it before running the bot (do NOT hardcode token in repo)."
+    )
+
+bot = telebot.TeleBot(BOT_TOKEN)
+
+
+def _mini_app_keyboard() -> types.ReplyKeyboardMarkup:
+    kb = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    kb.add(types.KeyboardButton("Зайти в приложение", web_app=types.WebAppInfo(url=MINI_APP_URL)))
+    return kb
+
 
 @bot.message_handler(commands=["start"])
-def start(m, res=False):
-   bot.send_message(m.chat.id, 'Напиши мне что-нибудь')
+def start(message: types.Message):
+    bot.send_message(
+        message.chat.id,
+        "Привет! Мы пока что не умеем все норм делать, нажми на кнопку ниже, чтобы зайти в наше приложение)",
+        reply_markup=_mini_app_keyboard(),
+    )
+
+
+@bot.message_handler(content_types=["web_app_data"])
+def web_app_data_handler(message: types.Message):
+    """
+    Telegram присылает сюда данные, если Mini App вызвал:
+    Telegram.WebApp.sendData(...)
+    """
+    raw = getattr(message.web_app_data, "data", None)
+    if not raw:
+        bot.send_message(message.chat.id, "Пришли данные из Mini App, но они пустые.")
+        return
+
+    try:
+        payload = json.loads(raw)
+        pretty = json.dumps(payload, ensure_ascii=False, indent=2)
+        bot.send_message(message.chat.id, f"Получил данные из Mini App:\n{pretty}")
+    except Exception:
+        bot.send_message(message.chat.id, f"Получил строку из Mini App:\n{raw}")
 
 
 @bot.message_handler(content_types=["text"])
-def handle_text(message):
-   bot.send_message(message.chat.id, 'Вы написали:' + message.text)
-bot.polling(none_stop=True, interval=0)
+def text_handler(message: types.Message):
+    if message.text and message.text.strip() == "/app":
+        bot.send_message(message.chat.id, "Открывай Mini App кнопкой ниже.", reply_markup=_mini_app_keyboard())
+        return
+    bot.send_message(message.chat.id, "Напиши /app или нажми кнопку “Открыть Mini App”.")
+
