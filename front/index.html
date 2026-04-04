@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>NBVlth</title>
+  <link rel="stylesheet" href="./colors.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: var(--color-fon, #a5dcc6);
+      --surface: #ffffff;
+      --text-main: var(--color-5, #126171);
+      --text-soft: #335a60;
+      --accent: var(--color-4, #409da1);
+      --accent-strong: var(--color-5, #126171);
+      --success: var(--color-3, #45a994);
+      --border: var(--color-1, #95e3c4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--color-1, #95e3c4) 100%);
+      color: var(--text-main);
+    }
+
+    .app {
+      max-width: 480px;
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 8px 20px rgba(18, 97, 113, 0.12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin-left: -10px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .chip {
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(105, 197, 160, 0.18);
+      color: var(--text-main);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .card-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .name {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .role {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .match {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--success);
+      background: rgba(69, 169, 148, 0.12);
+      border-radius: 999px;
+      padding: 5px 8px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      background: rgba(64, 157, 161, 0.12);
+      color: var(--accent-strong);
+      border-radius: 8px;
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+
+    .actions-panel {
+      margin-top: auto;
+      background: #45a994;
+      border: 1px solid rgba(18, 97, 113, 0.22);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(18, 97, 113, 0.12);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      min-height: 100%;
+    }
+
+    .action-btn--main {
+      align-items: center;
+    }
+
+    .btn-banner {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--success);
+      background: rgba(69, 169, 148, 0.12);
+      border-radius: 999px;
+      padding: 4px 8px;
+      text-align: center;
+    }
+
+    .btn-banner--accent {
+      color: var(--accent-strong);
+      background: rgba(64, 157, 161, 0.12);
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #126171;
+      border-radius: 12px;
+      padding: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      background: #126171;
+      cursor: pointer;
+    }
+
+    .nav-btn-img {
+      max-width: 100%;
+      max-height: 40px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      pointer-events: none;
+    }
+
+    .main-btn {
+      flex: 0 0 auto;
+      width: 50%;
+      max-width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      background: #126171;
+      box-shadow: 0 4px 12px rgba(18, 97, 113, 0.2);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="header">
+      <div class="brand">
+        <img
+          class="brand-logo"
+          src="kartink/image%20(2).png"
+          width="44"
+          height="44"
+          alt=""
+          decoding="async"
+        />
+        <h1 class="title">ТИМдер</h1>
+      </div>
+      <p class="subtitle">Подбор людей для хакатона по ролям, навыкам и занятости.</p>
+    </section>
+
+    <section class="filters" aria-label="Фильтры">
+      <span class="chip active">Все</span>
+      <span class="chip">Frontend</span>
+      <span class="chip">Backend</span>
+      <span class="chip">Designer</span>
+      <span class="chip">ML/AI</span>
+    </section>
+
+    <section class="card-list" aria-label="Кандидаты">
+      <article class="card">
+        <div class="row">
+          <div>
+            <p class="name">Анна</p>
+            <p class="role">Frontend Developer</p>
+          </div>
+          <span class="match">92% match</span>
+        </div>
+        <div class="tags">
+          <span class="tag">React</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">UI</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="row">
+          <div>
+            <p class="name">Илья</p>
+            <p class="role">Backend Developer</p>
+          </div>
+          <span class="match">88% match</span>
+        </div>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">FastAPI</span>
+          <span class="tag">PostgreSQL</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="actions-panel" aria-label="Навигация и действие">
+      <div class="actions">
+        <div class="action-btn">
+          <button class="nav-btn" type="button" aria-label="На главную">
+            <img class="nav-btn-img" src="kartink/image.png" alt="" decoding="async" />
+          </button>
+        </div>
+        <div class="action-btn action-btn--main">
+          <button class="main-btn" type="button">Создать команду</button>
+        </div>
+        <div class="action-btn">
+          <button class="nav-btn" type="button" aria-label="Личный кабинет">
+            <img class="nav-btn-img" src="kartink/image%20(1).png" alt="" decoding="async" />
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+  </script>
+</body>
+</html>
