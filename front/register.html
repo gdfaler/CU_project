@@ -3,20 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>NBVlth</title>
+  <title>Регистрация — ТИМдер</title>
   <link rel="stylesheet" href="./colors.css" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script>
-    const tg = window.Telegram.WebApp;
-
-    const user = tg.initDataUnsafe.user;
-
-    console.log(user);
-
-    // пример:
-    const username = user?.username;
-    const id = user?.id;
-  </script>
   <style>
     :root {
       --bg: var(--color-fon, #a5dcc6);
@@ -84,29 +73,6 @@
       color: var(--text-soft);
     }
 
-    .filters {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-    }
-
-    .chip {
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(105, 197, 160, 0.18);
-      color: var(--text-main);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .chip.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
     .card-list {
       display: grid;
       gap: 10px;
@@ -118,49 +84,45 @@
       border-radius: 14px;
       padding: 12px;
       display: grid;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .name {
+    .form-label {
       margin: 0;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
+      color: var(--accent-strong);
     }
 
-    .role {
-      margin: 0;
+    .form-hint {
+      margin: -4px 0 0;
       font-size: 13px;
       color: var(--text-soft);
+      line-height: 1.35;
     }
 
-    .match {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--success);
-      background: rgba(69, 169, 148, 0.12);
-      border-radius: 999px;
-      padding: 5px 8px;
+    .input {
+      width: 100%;
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--text-main);
+      background: #fff;
+      min-height: 96px;
+      resize: vertical;
     }
 
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+    .input:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
     }
 
-    .tag {
-      background: rgba(64, 157, 161, 0.12);
-      color: var(--accent-strong);
-      border-radius: 8px;
-      font-size: 12px;
-      padding: 4px 8px;
+    .input::placeholder {
+      color: rgba(51, 90, 96, 0.55);
     }
 
     .actions-panel {
@@ -192,23 +154,6 @@
     .action-btn--main {
       align-items: center;
       justify-content: center;
-    }
-
-    .btn-banner {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      color: var(--success);
-      background: rgba(69, 169, 148, 0.12);
-      border-radius: 999px;
-      padding: 4px 8px;
-      text-align: center;
-    }
-
-    .btn-banner--accent {
-      color: var(--accent-strong);
-      background: rgba(64, 157, 161, 0.12);
     }
 
     .nav-btn {
@@ -245,7 +190,7 @@
       border: none;
       border-radius: 14px;
       padding: 10px 8px;
-      font-size: clamp(11px, 2.8vw, 16px);
+      font-size: clamp(11px, 2.8vw, 15px);
       font-weight: 700;
       line-height: 1.25;
       color: #fff;
@@ -272,64 +217,65 @@
           alt=""
           decoding="async"
         />
-        <h1 class="title">ТИМдер</h1>
+        <h1 class="title">Регистрация</h1>
       </div>
-      <p class="subtitle">Подбор людей для хакатона по ролям, навыкам и занятости.</p>
+      <p class="subtitle">Заполните профиль — так проще подобрать команду на хакатон.</p>
     </section>
 
-    <section class="filters" aria-label="Фильтры">
-      <span class="chip active">Все</span>
-      <span class="chip">Frontend</span>
-      <span class="chip">Backend</span>
-      <span class="chip">Designer</span>
-      <span class="chip">ML/AI</span>
-    </section>
-
-    <section class="card-list" aria-label="Кандидаты">
+    <form class="card-list" id="register-form" action="#" method="post" aria-label="Регистрация">
       <article class="card">
-        <div class="row">
-          <div>
-            <p class="name">Анна</p>
-            <p class="role">Frontend Developer</p>
-          </div>
-          <span class="match">92% match</span>
-        </div>
-        <div class="tags">
-          <span class="tag">React</span>
-          <span class="tag">TypeScript</span>
-          <span class="tag">UI</span>
-        </div>
+        <label class="form-label" for="field-roles">1. Роли</label>
+        <p class="form-hint">Кем хотите участвовать: разработчик, дизайнер, аналитик, тимлид и т.д. Можно несколько.</p>
+        <textarea
+          class="input"
+          id="field-roles"
+          name="roles"
+          rows="4"
+          placeholder="Например: Frontend, UI/UX"
+          required
+        ></textarea>
       </article>
 
       <article class="card">
-        <div class="row">
-          <div>
-            <p class="name">Илья</p>
-            <p class="role">Backend Developer</p>
-          </div>
-          <span class="match">88% match</span>
-        </div>
-        <div class="tags">
-          <span class="tag">Python</span>
-          <span class="tag">FastAPI</span>
-          <span class="tag">PostgreSQL</span>
-        </div>
+        <label class="form-label" for="field-about">2. О себе</label>
+        <p class="form-hint">Коротко: опыт, интересы, чем готовы помочь команде.</p>
+        <textarea
+          class="input"
+          id="field-about"
+          name="about"
+          rows="5"
+          placeholder="Расскажите о себе…"
+          required
+        ></textarea>
       </article>
-    </section>
 
-    <section class="actions-panel" aria-label="Навигация и действие">
+      <article class="card">
+        <label class="form-label" for="field-skills">3. Навыки</label>
+        <p class="form-hint">Стек и инструменты через запятую или с новой строки.</p>
+        <textarea
+          class="input"
+          id="field-skills"
+          name="skills"
+          rows="4"
+          placeholder="React, Python, Figma…"
+          required
+        ></textarea>
+      </article>
+    </form>
+
+    <section class="actions-panel" aria-label="Действия">
       <div class="actions">
         <div class="action-btn">
-          <button class="nav-btn" type="button" aria-label="На главную">
-            <img class="nav-btn-img" <img class="nav-btn-img" src="{{ url_for('static', filename='kartink/image.png') }}">
-          </button>
+          <a class="nav-btn" href="index.html" aria-label="На главную">
+            <img class="nav-btn-img" src="kartink/image.png" alt="" decoding="async" />
+          </a>
         </div>
         <div class="action-btn action-btn--main">
-          <button class="main-btn" type="button">Создать команду</button>
+          <button class="main-btn" type="submit" form="register-form">Сохранить</button>
         </div>
         <div class="action-btn">
           <a class="nav-btn" href="profile.html" aria-label="Личный кабинет">
-            <img class="nav-btn-img" <img class="nav-btn-img" src="{{ url_for('static', filename='kartink/hel.png') }}">
+            <img class="nav-btn-img" src="kartink/image%20(1).png" alt="" decoding="async" />
           </a>
         </div>
       </div>

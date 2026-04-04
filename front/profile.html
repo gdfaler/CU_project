@@ -3,20 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>NBVlth</title>
+  <title>Личный кабинет — ТИМдер</title>
   <link rel="stylesheet" href="./colors.css" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script>
-    const tg = window.Telegram.WebApp;
-
-    const user = tg.initDataUnsafe.user;
-
-    console.log(user);
-
-    // пример:
-    const username = user?.username;
-    const id = user?.id;
-  </script>
   <style>
     :root {
       --bg: var(--color-fon, #a5dcc6);
@@ -84,29 +73,6 @@
       color: var(--text-soft);
     }
 
-    .filters {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-    }
-
-    .chip {
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(105, 197, 160, 0.18);
-      color: var(--text-main);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .chip.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
     .card-list {
       display: grid;
       gap: 10px;
@@ -118,25 +84,41 @@
       border-radius: 14px;
       padding: 12px;
       display: grid;
-      gap: 8px;
+      gap: 12px;
     }
 
-    .row {
+    .card-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent-strong);
+    }
+
+    .profile-top {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      background: rgba(105, 197, 160, 0.25);
     }
 
     .name {
       margin: 0;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
     }
 
     .role {
-      margin: 0;
-      font-size: 13px;
+      margin: 4px 0 0;
+      font-size: 14px;
       color: var(--text-soft);
     }
 
@@ -147,6 +129,7 @@
       background: rgba(69, 169, 148, 0.12);
       border-radius: 999px;
       padding: 5px 8px;
+      align-self: flex-start;
     }
 
     .tags {
@@ -161,6 +144,27 @@
       border-radius: 8px;
       font-size: 12px;
       padding: 4px 8px;
+    }
+
+    .fields {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field-label {
+      margin: 0 0 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .field-value {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.45;
+      word-break: break-word;
     }
 
     .actions-panel {
@@ -194,23 +198,6 @@
       justify-content: center;
     }
 
-    .btn-banner {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      color: var(--success);
-      background: rgba(69, 169, 148, 0.12);
-      border-radius: 999px;
-      padding: 4px 8px;
-      text-align: center;
-    }
-
-    .btn-banner--accent {
-      color: var(--accent-strong);
-      background: rgba(64, 157, 161, 0.12);
-    }
-
     .nav-btn {
       flex: 1;
       display: flex;
@@ -225,6 +212,11 @@
       background: #126171;
       cursor: pointer;
       text-decoration: none;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.88;
+      cursor: default;
     }
 
     .nav-btn-img {
@@ -245,17 +237,18 @@
       border: none;
       border-radius: 14px;
       padding: 10px 8px;
-      font-size: clamp(11px, 2.8vw, 16px);
+      font-size: clamp(11px, 2.8vw, 14px);
       font-weight: 700;
       line-height: 1.25;
       color: #fff;
       background: #126171;
       box-shadow: 0 4px 12px rgba(18, 97, 113, 0.2);
       cursor: pointer;
+      text-decoration: none;
+      text-align: center;
       white-space: normal;
       overflow-wrap: break-word;
       word-break: break-word;
-      text-align: center;
       hyphens: auto;
     }
   </style>
@@ -272,65 +265,106 @@
           alt=""
           decoding="async"
         />
-        <h1 class="title">ТИМдер</h1>
+        <h1 class="title">Личный кабинет</h1>
       </div>
-      <p class="subtitle">Подбор людей для хакатона по ролям, навыкам и занятости.</p>
+      <p class="subtitle">Данные профиля для подбора команды на хакатон.</p>
     </section>
 
-    <section class="filters" aria-label="Фильтры">
-      <span class="chip active">Все</span>
-      <span class="chip">Frontend</span>
-      <span class="chip">Backend</span>
-      <span class="chip">Designer</span>
-      <span class="chip">ML/AI</span>
-    </section>
-
-    <section class="card-list" aria-label="Кандидаты">
+    <section class="card-list" aria-label="Профиль">
       <article class="card">
-        <div class="row">
+        <div class="profile-top">
+          <img class="avatar" src="{{ url_for('static', filename='kartink/logo.png') }}" width="72" height="72" alt="" decoding="async" />
           <div>
-            <p class="name">Анна</p>
-            <p class="role">Frontend Developer</p>
+            <p class="name">Алексей Иванов</p>
+            <p class="role">Full-stack · Москва</p>
+            <span class="match" style="margin-top: 8px; display: inline-block">Профиль заполнен</span>
           </div>
-          <span class="match">92% match</span>
-        </div>
-        <div class="tags">
-          <span class="tag">React</span>
-          <span class="tag">TypeScript</span>
-          <span class="tag">UI</span>
         </div>
       </article>
 
       <article class="card">
-        <div class="row">
+        <h2 class="card-title">Идентификация</h2>
+        <div class="fields">
           <div>
-            <p class="name">Илья</p>
-            <p class="role">Backend Developer</p>
+            <p class="field-label">Имя и фамилия</p>
+            <p class="field-value">Алексей Иванов</p>
           </div>
-          <span class="match">88% match</span>
+          <div>
+            <p class="field-label">Ник в Telegram</p>
+            <p class="field-value">@alex_hack</p>
+          </div>
+          <div>
+            <p class="field-label">Приоритетные роли на хакатоне</p>
+            <p class="field-value">Разработчик (full-stack)</p>
+          </div>
         </div>
-        <div class="tags">
+      </article>
+
+      <article class="card">
+        <h2 class="card-title">Контакты</h2>
+        <div class="fields">
+          <div>
+            <p class="field-label">Email</p>
+            <p class="field-value">alex.ivanov@example.com</p>
+          </div>
+          <div>
+            <p class="field-label">GitHub</p>
+            <p class="field-value">github.com/alexivanov</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2 class="card-title">Навыки</h2>
+        <div class="tags" aria-label="Стек">
           <span class="tag">Python</span>
           <span class="tag">FastAPI</span>
+          <span class="tag">React</span>
           <span class="tag">PostgreSQL</span>
+          <span class="tag">Docker</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2 class="card-title">О себе</h2>
+        <p class="field-value" style="font-size: 14px; color: var(--text-soft)">
+          Участвовал в 3 хакатонах, люблю быстрый MVP и понятную архитектуру. Готов вести бэкенд и помогать с фронтом.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2 class="card-title">Участие</h2>
+        <div class="fields">
+          <div>
+            <p class="field-label">Формат</p>
+            <p class="field-value">Онлайн / гибрид</p>
+          </div>
+          <div>
+            <p class="field-label">Занятость на время хакатона</p>
+            <p class="field-value">Полная (выходные + вечера)</p>
+          </div>
+          <div>
+            <p class="field-label">Язык общения</p>
+            <p class="field-value">Русский, English B2</p>
+          </div>
         </div>
       </article>
     </section>
 
-    <section class="actions-panel" aria-label="Навигация и действие">
+    <section class="actions-panel" aria-label="Навигация">
       <div class="actions">
         <div class="action-btn">
-          <button class="nav-btn" type="button" aria-label="На главную">
-            <img class="nav-btn-img" <img class="nav-btn-img" src="{{ url_for('static', filename='kartink/image.png') }}">
-          </button>
+          <a class="nav-btn" href="{{ url_for('home') }}" aria-label="На главную">
+            <img class="nav-btn-img" src="{{ url_for('static', filename='kartink/image.png') }}"" alt="" decoding="async" />
+          </a>
         </div>
         <div class="action-btn action-btn--main">
-          <button class="main-btn" type="button">Создать команду</button>
+          <a class="main-btn" href="index.html">К подбору</a>
         </div>
         <div class="action-btn">
-          <a class="nav-btn" href="profile.html" aria-label="Личный кабинет">
-            <img class="nav-btn-img" <img class="nav-btn-img" src="{{ url_for('static', filename='kartink/hel.png') }}">
-          </a>
+          <button class="nav-btn" type="button" disabled aria-current="page" aria-label="Личный кабинет (текущая страница)">
+            <img class="nav-btn-img" src="kartink/hel.png" alt="" decoding="async" />
+          </button>
         </div>
       </div>
     </section>
